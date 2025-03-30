@@ -1,0 +1,202 @@
+[
+  {
+    "number": 1,
+    "name": "Al-Fatihah",
+    "juz": 1,
+    "total_ayah": 7,
+    "type_surah": "Makkiyah",
+    "arab": "الفاتحة"
+  },
+  {
+    "number": 2,
+    "name": "Al-Baqarah",
+    "juz": 1,
+    "total_ayah": 286,
+    "type_surah": "Madaniyah",
+    "arab": "البقرة"
+  },
+  {
+    "number": 3,
+    "name": "Ali 'Imran",
+    "juz": 3,
+    "total_ayah": 200,
+    "type_surah": "Madaniyah",
+    "arab": "آل عمران"
+  },
+  {
+    "number": 4,
+    "name": "An-Nisa'",
+    "juz": 4,
+    "total_ayah": 176,
+    "type_surah": "Madaniyah",
+    "arab": "النساء"
+  },
+  {
+    "number": 5,
+    "name": "Al-Ma'idah",
+    "juz": 6,
+    "total_ayah": 120,
+    "type_surah": "Madaniyah",
+    "arab": "المائدة"
+  },
+  {
+    "number": 6,
+    "name": "Al-An'am",
+    "juz": 7,
+    "total_ayah": 165,
+    "type_surah": "Makkiyah",
+    "arab": "الأنعام"
+  },
+  {
+    "number": 7,
+    "name": "Al-A'raf",
+    "juz": 8,
+    "total_ayah": 206,
+    "type_surah": "Makkiyah",
+    "arab": "الأعراف"
+  },
+  {
+    "number": 8,
+    "name": "Al-Anfal",
+    "juz": 9,
+    "total_ayah": 75,
+    "type_surah": "Madaniyah",
+    "arab": "الأنفال"
+  },
+  {
+    "number": 9,
+    "name": "At-Tawbah",
+    "juz": 10,
+    "total_ayah": 129,
+    "type_surah": "Madaniyah",
+    "arab": "التوبة"
+  },
+  {
+    "number": 10,
+    "name": "Yunus",
+    "juz": 11,
+    "total_ayah": 109,
+    "type_surah": "Makkiyah",
+    "arab": "يونس"
+  },
+  {
+    "number": 11,
+    "name": "Hud",
+    "juz": 11,
+    "total_ayah": 123,
+    "type_surah": "Makkiyah",
+    "arab": "هود"
+  },
+  {
+    "number": 12,
+    "name": "Yusuf",
+    "juz": 12,
+    "total_ayah": 111,
+    "type_surah": "Makkiyah",
+    "arab": "يوسف"
+  },
+  {
+    "number": 13,
+    "name": "Ar-Ra'd",
+    "juz": 13,
+    "total_ayah": 43,
+    "type_surah": "Madaniyah",
+    "arab": "الرعد"
+  },
+  {
+    "number": 14,
+    "name": "Ibrahim",
+    "juz": 13,
+    "total_ayah": 52,
+    "type_surah": "Makkiyah",
+    "arab": "إبراهيم"
+  },
+  {
+    "number": 15,
+    "name": "Al-Hijr",
+    "juz": 14,
+    "total_ayah": 99,
+    "type_surah": "Makkiyah",
+    "arab": "الحجر"
+  },
+  {
+    "number": 16,
+    "name": "An-Nahl",
+    "juz": 14,
+    "total_ayah": 128,
+    "type_surah": "Makkiyah",
+    "arab": "النحل"
+  },
+  {
+    "number": 17,
+    "name": "Al-Isra'",
+    "juz": 15,
+    "total_ayah": 111,
+    "type_surah": "Makkiyah",
+    "arab": "الإسراء"
+  },
+  {
+    "number": 18,
+    "name": "Al-Kahf",
+    "juz": 15,
+    "total_ayah": 110,
+    "type_surah": "Makkiyah",
+    "arab": "الكهف"
+  },
+  {
+    "number": 19,
+    "name": "Maryam",
+    "juz": 16,
+    "total_ayah": 98,
+    "type_surah": "Makkiyah",
+    "arab": "مريم"
+  },
+  {
+    "number": 20,
+    "name": "Taha",
+    "juz": 16,
+    "total_ayah": 135,
+    "type_surah": "Makkiyah",
+    "arab": "طه"
+  },
+  {
+    "number": 21,
+    "name": "Al-Anbiya'",
+    "juz": 17,
+    "total_ayah": 112,
+    "type_surah": "Makkiyah",
+    "arab": "الأنبياء"
+  },
+  {
+    "number": 22,
+    "name": "Al-Hajj",
+    "juz": 17,
+    "total_ayah": 78,
+    "type_surah": "Madaniyah",
+    "arab": "الحج"
+  },
+  {
+    "number": 23,
+    "name": "Al-Mu'minun",
+    "juz": 18,
+    "total_ayah": 118,
+    "type_surah": "Makkiyah",
+    "arab": "المؤمنون"
+  },
+  {
+    "number": 24,
+    "name": "An-Nur",
+    "juz": 18,
+    "total_ayah": 64,
+    "type_surah": "Madaniyah",
+    "arab": "النور"
+  },
+  {
+    "number": 114,
+    "name": "An-Nas",
+    "juz": 30,
+    "total_ayah": 6,
+    "type_surah": "Makkiyah",
+    "arab": "الناس"
+  }
+]
