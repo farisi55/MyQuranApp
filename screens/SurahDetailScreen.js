@@ -1,18 +1,49 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import Modal from 'react-native-modal';
 import { surahData } from '../data/surahData'; // Impor objek JSON
 
 const SurahDetailScreen = () => {
   const route = useRoute();
   const { surah } = route.params;
   const [surahDetail, setSurahDetail] = useState(null);
+  const [selectedAyah, setSelectedAyah] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isTafsirVisible, setTafsirVisible] = useState(false);
 
   useEffect(() => {
-    // Ambil data dari objek yang sudah diimpor
     const data = surahData[surah.number];
     setSurahDetail(data);
   }, [surah]);
+
+  const handleLongPress = (ayah) => {
+    setSelectedAyah(ayah);
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
+
+  const handleMarkLastRead = () => {
+    console.log(`Menandai terakhir dibaca: Ayat ${selectedAyah.number.inSurah}`);
+    handleCloseModal();
+  };
+
+  const handleBookmark = () => {
+    console.log(`Menambahkan ke Bookmark: Ayat ${selectedAyah.number.inSurah}`);
+    handleCloseModal();
+  };
+
+  const handleViewTafsir = () => {
+    setTafsirVisible(true);
+    handleCloseModal();
+  };
+
+  const handleCloseTafsir = () => {
+    setTafsirVisible(false);
+  };
 
   if (!surahDetail) {
     return (
@@ -33,59 +64,70 @@ const SurahDetailScreen = () => {
         data={surahDetail.ayahs}
         keyExtractor={(item) => item.number.inQuran.toString()}
         renderItem={({ item }) => (
-          <View style={styles.ayahContainer}>
-            <Text style={styles.ayahNumber}>{item.number.inSurah}.</Text>
-            <Text style={styles.arabic}>{item.arab}</Text>
-            <Text style={styles.translation}>{item.translation}</Text>
-          </View>
+          <TouchableOpacity onLongPress={() => handleLongPress(item)}>
+            <View style={styles.ayahContainer}>
+              <Text style={styles.ayahNumber}>{item.number.inSurah}.</Text>
+              <Text style={styles.arabic}>{item.arab}</Text>
+              <Text style={styles.translation}>{item.translation}</Text>
+            </View>
+          </TouchableOpacity>
         )}
       />
+
+      {/* Modal untuk Popup Menu */}
+      <Modal isVisible={isModalVisible} onBackdropPress={handleCloseModal}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>
+            Pilihan Ayat {selectedAyah?.number.inSurah}
+          </Text>
+          <TouchableOpacity style={styles.modalItem} onPress={handleMarkLastRead}>
+            <Text>🔖 Tandai Terakhir Dibaca</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.modalItem} onPress={handleBookmark}>
+            <Text>📌 Tambahkan ke Bookmark</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.modalItem} onPress={handleViewTafsir}>
+            <Text>📖 Lihat Tafsir</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
+      {/* Modal untuk Menampilkan Tafsir */}
+      <Modal isVisible={isTafsirVisible} onBackdropPress={handleCloseTafsir}>
+        <View style={styles.modalTafsir}>
+          <Text style={styles.modalTitle}>
+            Tafsir Ayat {selectedAyah?.number.inSurah}
+          </Text>
+          <ScrollView>
+            <Text style={styles.tafsirText}>
+              {selectedAyah?.tafsir?.kemenag?.short || 'Tafsir tidak tersedia'}
+            </Text>
+          </ScrollView>
+          <TouchableOpacity style={styles.closeButton} onPress={handleCloseTafsir}>
+            <Text style={styles.closeButtonText}>Tutup</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 18,
-    textAlign: 'center',
-    color: 'gray',
-    marginBottom: 12,
-  },
-  loadingText: {
-    fontSize: 18,
-    textAlign: 'center',
-    marginTop: 20,
-  },
-  ayahContainer: {
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  ayahNumber: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  arabic: {
-    fontSize: 22,
-    textAlign: 'right',
-    marginTop: 4,
-  },
-  translation: {
-    fontSize: 16,
-    color: 'gray',
-    marginTop: 4,
-  },
+  container: { flex: 1, padding: 16, backgroundColor: '#fff' },
+  title: { fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 4 },
+  subtitle: { fontSize: 18, textAlign: 'center', color: 'gray', marginBottom: 12 },
+  loadingText: { fontSize: 18, textAlign: 'center', marginTop: 20 },
+  ayahContainer: { paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#ddd' },
+  ayahNumber: { fontSize: 12, fontWeight: 'bold' },
+  arabic: { fontSize: 30, textAlign: 'right', marginTop: 4, fontFamily: 'AmiriQuran-Regular' },
+  translation: { fontSize: 12, color: 'gray', marginTop: 4 },
+  modalContent: { backgroundColor: 'white', padding: 20, borderRadius: 10 },
+  modalTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10, textAlign: 'center' },
+  modalItem: { padding: 10, borderBottomWidth: 1, borderBottomColor: '#ddd' },
+  modalTafsir: { backgroundColor: 'white', padding: 20, borderRadius: 10, height: '60%' },
+  tafsirText: { fontSize: 16, textAlign: 'justify', marginTop: 10 },
+  closeButton: { marginTop: 20, backgroundColor: '#007bff', padding: 10, borderRadius: 5, alignItems: 'center' },
+  closeButtonText: { color: 'white', fontWeight: 'bold' },
 });
 
 export default SurahDetailScreen;
