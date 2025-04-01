@@ -164,12 +164,15 @@ const SurahDetailScreen = () => {
             value={bookmarkName}
             onChangeText={setBookmarkName}
           />
-          <TouchableOpacity style={styles.addButton} onPress={handleAddBookmark}>
-            <Text style={styles.addButtonText}>Tambah</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelButton} onPress={() => setBookmarkModalVisible(false)}>
-            <Text style={styles.cancelButtonText}>Batal</Text>
-          </TouchableOpacity>
+
+          <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.addButton} onPress={handleAddBookmark}>
+                <Text style={styles.addButtonText}>Tambah</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.cancelButton} onPress={() => setBookmarkModalVisible(false)}>
+                <Text style={styles.cancelButtonText}>Batal</Text>
+              </TouchableOpacity>
+          </View>
         </View>
       </Modal>
 
@@ -197,16 +200,17 @@ const SurahDetailScreen = () => {
             value={newBookmarkName}
             onChangeText={setNewBookmarkName}
           />
+         <View style={styles.buttonContainer}>
+              {/* Tombol Tambah */}
+              <TouchableOpacity style={styles.addButton} onPress={handleAddLastRead}>
+                <Text style={styles.addButtonText}>Tambah</Text>
+              </TouchableOpacity>
 
-          {/* Tombol Tambah */}
-          <TouchableOpacity style={styles.addButton} onPress={handleAddLastRead}>
-            <Text style={styles.addButtonText}>Tambah</Text>
-          </TouchableOpacity>
-
-          {/* Tombol Batal */}
-          <TouchableOpacity style={styles.cancelButton} onPress={() => setLastReadModalVisible(false)}>
-            <Text style={styles.cancelButtonText}>Batal</Text>
-          </TouchableOpacity>
+              {/* Tombol Batal */}
+              <TouchableOpacity style={styles.cancelButton} onPress={() => setLastReadModalVisible(false)}>
+                <Text style={styles.cancelButtonText}>Batal</Text>
+              </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </View>
@@ -229,17 +233,35 @@ const styles = StyleSheet.create({
   tafsirText: { fontSize: 16, textAlign: 'justify', marginTop: 10 },
   closeButton: { marginTop: 20, backgroundColor: '#007bff', padding: 10, borderRadius: 5, alignItems: 'center' },
   closeButtonText: { color: 'white', fontWeight: 'bold' },
-  cancelButton: {
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: 10,
-    backgroundColor: '#dc3545', // Warna merah untuk tombol batal
+  },
+
+  addButton: {
+    flex: 1,
+    backgroundColor: '#28a745', // Warna hijau untuk tombol Tambah
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
+    marginRight: 5, // Jarak antar tombol
   },
-  cancelButtonText: {
+
+  cancelButton: {
+    flex: 1,
+    backgroundColor: '#dc3545', // Warna merah untuk tombol Batal
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginLeft: 5, // Jarak antar tombol
+  },
+
+  buttonText: {
     color: 'white',
     fontWeight: 'bold',
   },
+
 });
 
 export default SurahDetailScreen;
