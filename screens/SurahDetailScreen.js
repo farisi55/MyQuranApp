@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, ScrollView, Alert, TextInput } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import { surahData } from '../data/surahData';
-import { initDatabase, saveLastRead, getLastRead } from '../utils/database';
+import { saveLastRead, getLastReadList, updateLastRead } from '../utils/database';
 
 const SurahDetailScreen = () => {
   const route = useRoute();
@@ -12,19 +12,16 @@ const SurahDetailScreen = () => {
   const [selectedAyah, setSelectedAyah] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isTafsirVisible, setTafsirVisible] = useState(false);
-  const [lastRead, setLastRead] = useState(null);
+  const [lastReadList, setLastReadList] = useState([]);
+  const [isLastReadModalVisible, setLastReadModalVisible] = useState(false);
+  const [newBookmarkName, setNewBookmarkName] = useState('');
 
   useEffect(() => {
-    initDatabase(); // Inisialisasi database saat screen pertama kali dimuat
     const data = surahData[surah.number];
     setSurahDetail(data);
 
-    // Ambil data terakhir dibaca dari database
-    getLastRead((data) => {
-      if (data) {
-        setLastRead(data);
-      }
-    });
+    // Ambil daftar terakhir dibaca
+    getLastReadList((data) => setLastReadList(data));
   }, [surah]);
 
   const handleLongPress = (ayah) => {
@@ -32,34 +29,40 @@ const SurahDetailScreen = () => {
     setModalVisible(true);
   };
 
-  const handleCloseModal = () => {
+  const handleMarkLastRead = () => {
+    setLastReadModalVisible(true);
     setModalVisible(false);
   };
 
-  const handleMarkLastRead = () => {
-    if (selectedAyah) {
-      saveLastRead(surah.number, surah.name, selectedAyah.number.inSurah, (status) => {
-        if (status === 'success') {
-          Alert.alert('Berhasil', `Ayat ${selectedAyah.number.inSurah} ditandai sebagai terakhir dibaca.`);
-          setLastRead({ surah: surah.number, name_surah: surah.name, ayah: selectedAyah.number.inSurah });
-        }
-      });
-    }
-    handleCloseModal();
+  const handleSelectLastRead = (id) => {
+    if (!selectedAyah) return;
+    updateLastRead(id, selectedAyah.number.inSurah, (status) => {
+      if (status === 'updated') {
+        Alert.alert('Berhasil', 'Ayat terakhir dibaca diperbarui.');
+        getLastReadList((data) => setLastReadList(data));
+        setLastReadModalVisible(false);
+      }
+    });
   };
 
-  const handleBookmark = () => {
-    console.log(`Menambahkan ke Bookmark: Ayat ${selectedAyah.number.inSurah}`);
-    handleCloseModal();
+  const handleAddLastRead = () => {
+    if (!selectedAyah || !newBookmarkName.trim()) {
+      Alert.alert('Gagal', 'Nama Terakhir Baca tidak boleh kosong.');
+      return;
+    }
+    saveLastRead(surah.number, surah.name, selectedAyah.number.inSurah, newBookmarkName, (status) => {
+      if (status === 'success') {
+        Alert.alert('Berhasil', `Bookmark "${newBookmarkName}" ditambahkan.`);
+        setNewBookmarkName('');
+        getLastReadList((data) => setLastReadList(data));
+        setLastReadModalVisible(false);
+      }
+    });
   };
 
   const handleViewTafsir = () => {
     setTafsirVisible(true);
-    handleCloseModal();
-  };
-
-  const handleCloseTafsir = () => {
-    setTafsirVisible(false);
+    setModalVisible(false);
   };
 
   if (!surahDetail) {
@@ -77,14 +80,6 @@ const SurahDetailScreen = () => {
         {surah.translation} - {surahDetail.ayahs.length} Ayat
       </Text>
 
-      {lastRead && lastRead.surah === surah.number && (
-        <TouchableOpacity style={styles.lastReadContainer}>
-          <Text style={styles.lastReadText}>
-            🔖 Terakhir Dibaca: Ayat {lastRead.ayah}
-          </Text>
-        </TouchableOpacity>
-      )}
-
       <FlatList
         data={surahDetail.ayahs}
         keyExtractor={(item) => item.number.inQuran.toString()}
@@ -100,16 +95,13 @@ const SurahDetailScreen = () => {
       />
 
       {/* Modal untuk Popup Menu */}
-      <Modal isVisible={isModalVisible} onBackdropPress={handleCloseModal}>
+      <Modal isVisible={isModalVisible} onBackdropPress={() => setModalVisible(false)}>
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>
-            Pilihan Ayat {selectedAyah?.number.inSurah}
+            Pilihan Ayat {selectedAyah?.number.inSurah || ''}
           </Text>
           <TouchableOpacity style={styles.modalItem} onPress={handleMarkLastRead}>
             <Text>🔖 Tandai Terakhir Dibaca</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.modalItem} onPress={handleBookmark}>
-            <Text>📌 Tambahkan ke Bookmark</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.modalItem} onPress={handleViewTafsir}>
             <Text>📖 Lihat Tafsir</Text>
@@ -118,26 +110,56 @@ const SurahDetailScreen = () => {
       </Modal>
 
       {/* Modal untuk Menampilkan Tafsir */}
-      <Modal isVisible={isTafsirVisible} onBackdropPress={handleCloseTafsir}>
+      <Modal isVisible={isTafsirVisible} onBackdropPress={() => setTafsirVisible(false)}>
         <View style={styles.modalTafsir}>
           <Text style={styles.modalTitle}>
-            Tafsir Ayat {selectedAyah?.number.inSurah}
+            Tafsir Ayat {selectedAyah?.number.inSurah || ''}
           </Text>
           <ScrollView>
             <Text style={styles.tafsirText}>
               {selectedAyah?.tafsir?.kemenag?.short || 'Tafsir tidak tersedia'}
             </Text>
           </ScrollView>
-          <TouchableOpacity style={styles.closeButton} onPress={handleCloseTafsir}>
+          <TouchableOpacity style={styles.closeButton} onPress={() => setTafsirVisible(false)}>
             <Text style={styles.closeButtonText}>Tutup</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
+      {/* Modal untuk Menambahkan Terakhir Dibaca */}
+      <Modal isVisible={isLastReadModalVisible} onBackdropPress={() => setLastReadModalVisible(false)}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Pilih atau Tambah Terakhir Dibaca</Text>
+          <FlatList
+            data={lastReadList}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity style={styles.modalItem} onPress={() => handleSelectLastRead(item.id)}>
+                <Text>{item.name_bookmark} - Ayat {item.ayah}</Text>
+              </TouchableOpacity>
+            )}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Nama Terakhir dibaca baru..."
+            value={newBookmarkName}
+            onChangeText={setNewBookmarkName}
+          />
+
+          {/* Tombol Tambah */}
+          <TouchableOpacity style={styles.addButton} onPress={handleAddLastRead}>
+            <Text style={styles.addButtonText}>Tambah</Text>
+          </TouchableOpacity>
+
+          {/* Tombol Batal */}
+          <TouchableOpacity style={styles.cancelButton} onPress={() => setLastReadModalVisible(false)}>
+            <Text style={styles.cancelButtonText}>Batal</Text>
           </TouchableOpacity>
         </View>
       </Modal>
     </View>
   );
 };
-
-
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, backgroundColor: '#fff' },
@@ -155,9 +177,17 @@ const styles = StyleSheet.create({
   tafsirText: { fontSize: 16, textAlign: 'justify', marginTop: 10 },
   closeButton: { marginTop: 20, backgroundColor: '#007bff', padding: 10, borderRadius: 5, alignItems: 'center' },
   closeButtonText: { color: 'white', fontWeight: 'bold' },
-  /* Gaya tetap sama dengan kode Anda */
-  lastReadContainer: { padding: 10, backgroundColor: '#eee', marginBottom: 10 },
-  lastReadText: { fontSize: 14, fontWeight: 'bold' },
+  cancelButton: {
+    marginTop: 10,
+    backgroundColor: '#dc3545', // Warna merah untuk tombol batal
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  cancelButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 });
 
 export default SurahDetailScreen;

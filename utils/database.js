@@ -17,6 +17,8 @@ export const initDatabase = () => {
         name_surah TEXT,
         ayah INTEGER,
         type_bookmark TEXT,
+        name_bookmark TEXT,
+        is_active INTEGER DEFAULT 1,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );`,
       [],
@@ -26,35 +28,46 @@ export const initDatabase = () => {
   });
 };
 
-// Fungsi untuk menandai terakhir dibaca
-export const saveLastRead = (surah, name_surah, ayah, callback) => {
+// Menyimpan ayat terakhir dibaca (multiple save)
+export const saveLastRead = (surah, name_surah, ayah, name_bookmark, callback) => {
   db.transaction((tx) => {
     tx.executeSql(
-      `DELETE FROM quran_bookmark WHERE type_bookmark = 'lastread';`,
-      [],
-      () => {
-        tx.executeSql(
-          `INSERT INTO quran_bookmark (surah, name_surah, ayah, type_bookmark) VALUES (?, ?, ?, 'lastread');`,
-          [surah, name_surah, ayah],
-          () => callback('success'),
-          (error) => console.error('Error inserting last read:', error)
-        );
-      },
-      (error) => console.error('Error deleting previous last read:', error)
+      `INSERT INTO quran_bookmark (surah, name_surah, ayah, type_bookmark, name_bookmark, is_active)
+      VALUES (?, ?, ?, 'lastread', ?, 1);`,
+      [surah, name_surah, ayah, name_bookmark],
+      () => callback('success'),
+      (error) => console.error('Error inserting last read:', error)
     );
   });
 };
 
-// Fungsi untuk mengambil ayat terakhir dibaca
-export const getLastRead = (callback) => {
+// Mendapatkan daftar ayat terakhir dibaca
+export const getLastReadList = (callback) => {
   db.transaction((tx) => {
     tx.executeSql(
-      `SELECT surah, name_surah, ayah FROM quran_bookmark WHERE type_bookmark = 'lastread';`,
+      `SELECT id, surah, name_surah, ayah, name_bookmark FROM quran_bookmark
+       WHERE type_bookmark = 'lastread' AND is_active = 1;`,
       [],
       (_, result) => {
-        callback(result.rows.length > 0 ? result.rows.item(0) : null);
+        let lastReadList = [];
+        for (let i = 0; i < result.rows.length; i++) {
+          lastReadList.push(result.rows.item(i));
+        }
+        callback(lastReadList);
       },
-      (error) => console.error('Error fetching last read:', error)
+      (error) => console.error('Error fetching last read list:', error)
+    );
+  });
+};
+
+// Memperbarui ayat terakhir dibaca berdasarkan ID bookmark
+export const updateLastRead = (id, ayah, callback) => {
+  db.transaction((tx) => {
+    tx.executeSql(
+      `UPDATE quran_bookmark SET ayah = ? WHERE id = ?;`,
+      [ayah, id],
+      () => callback('updated'),
+      (error) => console.error('Error updating last read:', error)
     );
   });
 };
