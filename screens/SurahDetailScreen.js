@@ -3,7 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet, ScrollView, Alert, 
 import { useRoute } from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import { surahData } from '../data/surahData';
-import { saveLastRead, getLastReadList, updateLastRead } from '../utils/database';
+import { initDatabase, saveLastRead, getLastReadList, updateLastRead, saveBookmark } from '../utils/database';
 
 const SurahDetailScreen = () => {
   const route = useRoute();
@@ -15,8 +15,12 @@ const SurahDetailScreen = () => {
   const [lastReadList, setLastReadList] = useState([]);
   const [isLastReadModalVisible, setLastReadModalVisible] = useState(false);
   const [newBookmarkName, setNewBookmarkName] = useState('');
+  const [isBookmarkModalVisible, setBookmarkModalVisible] = useState(false);
+  const [bookmarkName, setBookmarkName] = useState('');
+
 
   useEffect(() => {
+    initDatabase();
     const data = surahData[surah.number];
     setSurahDetail(data);
 
@@ -65,6 +69,27 @@ const SurahDetailScreen = () => {
     setModalVisible(false);
   };
 
+  const handleBookmark = () => {
+    setBookmarkModalVisible(true);
+    setModalVisible(false);
+  };
+
+  const handleAddBookmark = () => {
+    if (!bookmarkName.trim()) {
+      Alert.alert('Gagal', 'Nama bookmark tidak boleh kosong.');
+      return;
+    }
+
+    saveBookmark(surah.number, surah.name, selectedAyah.number.inSurah, bookmarkName, (status) => {
+      if (status === 'success') {
+        Alert.alert('Berhasil', `Bookmark "${bookmarkName}" ditambahkan.`);
+        setBookmarkName('');
+        setBookmarkModalVisible(false);
+      }
+    });
+  };
+
+
   if (!surahDetail) {
     return (
       <View style={styles.container}>
@@ -103,6 +128,9 @@ const SurahDetailScreen = () => {
           <TouchableOpacity style={styles.modalItem} onPress={handleMarkLastRead}>
             <Text>🔖 Tandai Terakhir Dibaca</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.modalItem} onPress={handleBookmark}>
+            <Text>📌 Tambahkan ke Bookmark</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.modalItem} onPress={handleViewTafsir}>
             <Text>📖 Lihat Tafsir</Text>
           </TouchableOpacity>
@@ -126,10 +154,33 @@ const SurahDetailScreen = () => {
         </View>
       </Modal>
 
+      {/* Modal untuk Menampilkan Bookmark */}
+      <Modal isVisible={isBookmarkModalVisible} onBackdropPress={() => setBookmarkModalVisible(false)}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Tambahkan Bookmark</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Masukkan nama bookmark..."
+            value={bookmarkName}
+            onChangeText={setBookmarkName}
+          />
+          <TouchableOpacity style={styles.addButton} onPress={handleAddBookmark}>
+            <Text style={styles.addButtonText}>Tambah</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.cancelButton} onPress={() => setBookmarkModalVisible(false)}>
+            <Text style={styles.cancelButtonText}>Batal</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
+
       {/* Modal untuk Menambahkan Terakhir Dibaca */}
       <Modal isVisible={isLastReadModalVisible} onBackdropPress={() => setLastReadModalVisible(false)}>
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Pilih atau Tambah Terakhir Dibaca</Text>
+          {lastReadList.length === 0 ? (
+            <Text style={{ textAlign: 'center', color: 'gray' }}>Belum ada ayat yang ditandai sebagai terakhir dibaca.</Text>
+          ) : (
           <FlatList
             data={lastReadList}
             keyExtractor={(item) => item.id.toString()}
@@ -138,7 +189,8 @@ const SurahDetailScreen = () => {
                 <Text>{item.name_bookmark} - Ayat {item.ayah}</Text>
               </TouchableOpacity>
             )}
-          />
+           />
+          )}
           <TextInput
             style={styles.input}
             placeholder="Nama Terakhir dibaca baru..."

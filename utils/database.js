@@ -19,7 +19,8 @@ export const initDatabase = () => {
         type_bookmark TEXT,
         name_bookmark TEXT,
         is_active INTEGER DEFAULT 1,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME
       );`,
       [],
       () => console.log('Table created'),
@@ -55,7 +56,16 @@ export const getLastReadList = (callback) => {
         }
         callback(lastReadList);
       },
-      (error) => console.error('Error fetching last read list:', error)
+      (_, error) => {
+              if (error.message.includes('no such table')) {
+                console.warn('Tabel quran_bookmark belum ada. Membuat tabel...');
+                initDatabase();
+                callback([]); // Kembalikan array kosong agar tidak error di UI
+              } else {
+                console.error('Error fetching last read list:', error);
+                callback([]); // Kembalikan array kosong sebagai default
+              }
+       }
     );
   });
 };
@@ -64,10 +74,28 @@ export const getLastReadList = (callback) => {
 export const updateLastRead = (id, ayah, callback) => {
   db.transaction((tx) => {
     tx.executeSql(
-      `UPDATE quran_bookmark SET ayah = ? WHERE id = ?;`,
+      `UPDATE quran_bookmark SET ayah = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?;`,
       [ayah, id],
       () => callback('updated'),
       (error) => console.error('Error updating last read:', error)
     );
   });
 };
+
+
+//save bookmark
+export const saveBookmark = (surahNumber, surahName, ayahNumber, bookmarkName, callback) => {
+  db.transaction((tx) => {
+    tx.executeSql(
+      `INSERT INTO quran_bookmark (surah, name_surah, ayah, type_bookmark, name_bookmark, is_active)
+       VALUES (?, ?, ?, 'bookmark', ?, 1)`,
+      [surahNumber, surahName, ayahNumber, bookmarkName],
+      (_, result) => callback('success'),
+      (_, error) => {
+        console.error('Gagal menyimpan bookmark:', error);
+        callback('error');
+      }
+    );
+  });
+};
+
