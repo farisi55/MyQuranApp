@@ -7,7 +7,7 @@ import { initDatabase, saveLastRead, getLastReadList, updateLastRead, saveBookma
 
 const SurahDetailScreen = () => {
   const route = useRoute();
-  const { surah } = route.params;
+  const { surah, surahNumber, ayahNumber } = route.params;
   const [surahDetail, setSurahDetail] = useState(null);
   const [selectedAyah, setSelectedAyah] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -27,6 +27,7 @@ const SurahDetailScreen = () => {
     // Ambil daftar terakhir dibaca
     getLastReadList((data) => setLastReadList(data));
   }, [surah]);
+
 
   const handleLongPress = (ayah) => {
     setSelectedAyah(ayah);
@@ -54,7 +55,7 @@ const SurahDetailScreen = () => {
       Alert.alert('Gagal', 'Nama Terakhir Baca tidak boleh kosong.');
       return;
     }
-    saveLastRead(surah.number, surah.name, selectedAyah.number.inSurah, newBookmarkName, (status) => {
+    saveLastRead(surah.number, surah.name, surah.translation, selectedAyah.number.inSurah, newBookmarkName, (status) => {
       if (status === 'success') {
         Alert.alert('Berhasil', `Bookmark "${newBookmarkName}" ditambahkan.`);
         setNewBookmarkName('');
@@ -80,7 +81,7 @@ const SurahDetailScreen = () => {
       return;
     }
 
-    saveBookmark(surah.number, surah.name, selectedAyah.number.inSurah, bookmarkName, (status) => {
+    saveBookmark(surah.number, surah.name, surah.translation, selectedAyah.number.inSurah, bookmarkName, (status) => {
       if (status === 'success') {
         Alert.alert('Berhasil', `Bookmark "${bookmarkName}" ditambahkan.`);
         setBookmarkName('');

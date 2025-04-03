@@ -15,6 +15,7 @@ export const initDatabase = () => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         surah INTEGER,
         name_surah TEXT,
+        translation TEXT,
         ayah INTEGER,
         type_bookmark TEXT,
         name_bookmark TEXT,
@@ -30,12 +31,12 @@ export const initDatabase = () => {
 };
 
 // Menyimpan ayat terakhir dibaca (multiple save)
-export const saveLastRead = (surah, name_surah, ayah, name_bookmark, callback) => {
+export const saveLastRead = (surah, name_surah, translation, ayah, name_bookmark, callback) => {
   db.transaction((tx) => {
     tx.executeSql(
-      `INSERT INTO quran_bookmark (surah, name_surah, ayah, type_bookmark, name_bookmark, is_active)
-      VALUES (?, ?, ?, 'lastread', ?, 1);`,
-      [surah, name_surah, ayah, name_bookmark],
+      `INSERT INTO quran_bookmark (surah, name_surah, translation, ayah, type_bookmark, name_bookmark, is_active)
+      VALUES (?, ?, ?, ?, 'lastread', ?, 1);`,
+      [surah, name_surah, translation, ayah, name_bookmark],
       () => callback('success'),
       (error) => console.error('Error inserting last read:', error)
     );
@@ -46,7 +47,7 @@ export const saveLastRead = (surah, name_surah, ayah, name_bookmark, callback) =
 export const getLastReadList = (callback) => {
   db.transaction((tx) => {
     tx.executeSql(
-      `SELECT id, surah, name_surah, ayah, name_bookmark FROM quran_bookmark
+      `SELECT id, surah, name_surah, translation, ayah, name_bookmark FROM quran_bookmark
        WHERE type_bookmark = 'lastread' AND is_active = 1;`,
       [],
       (_, result) => {
@@ -84,12 +85,12 @@ export const updateLastRead = (id, ayah, callback) => {
 
 
 //save bookmark
-export const saveBookmark = (surahNumber, surahName, ayahNumber, bookmarkName, callback) => {
+export const saveBookmark = (surahNumber, surahName, translation, ayahNumber, bookmarkName, callback) => {
   db.transaction((tx) => {
     tx.executeSql(
-      `INSERT INTO quran_bookmark (surah, name_surah, ayah, type_bookmark, name_bookmark, is_active)
-       VALUES (?, ?, ?, 'bookmark', ?, 1)`,
-      [surahNumber, surahName, ayahNumber, bookmarkName],
+      `INSERT INTO quran_bookmark (surah, name_surah, translation, ayah, type_bookmark, name_bookmark, is_active)
+       VALUES (?, ?, ?, ?,'bookmark', ?, 1)`,
+      [surahNumber, surahName, translation, ayahNumber, bookmarkName],
       (_, result) => callback('success'),
       (_, error) => {
         console.error('Gagal menyimpan bookmark:', error);
@@ -99,3 +100,42 @@ export const saveBookmark = (surahNumber, surahName, ayahNumber, bookmarkName, c
   });
 };
 
+// Mendapatkan daftar ayat bookmark
+export const getBookmarkList = (callback) => {
+  db.transaction((tx) => {
+    tx.executeSql(
+      `SELECT id, surah, name_surah, translation, ayah, name_bookmark FROM quran_bookmark
+       WHERE type_bookmark = 'bookmark' AND is_active = 1;`,
+      [],
+      (_, result) => {
+        let bookmarkList = [];
+        for (let i = 0; i < result.rows.length; i++) {
+          bookmarkList.push(result.rows.item(i));
+        }
+        callback(bookmarkList);
+      },
+      (_, error) => {
+              if (error.message.includes('no such table')) {
+                console.warn('Tabel quran_bookmark belum ada. Membuat tabel...');
+                initDatabase();
+                callback([]); // Kembalikan array kosong agar tidak error di UI
+              } else {
+                console.error('Error fetching last read list:', error);
+                callback([]); // Kembalikan array kosong sebagai default
+              }
+       }
+    );
+  });
+};
+
+//delete bookmark with update status
+export const updateBookmarkStatus = (id, isActive, callback) => {
+    db.transaction((tx) => {
+        tx.executeSql(
+            "UPDATE quran_bookmark SET is_active = ? WHERE id = ?",
+            [isActive, id],
+            () => callback(),
+            (_, error) => console.error('Error updating bookmark:', error)
+        );
+    });
+};
