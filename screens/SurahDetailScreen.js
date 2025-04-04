@@ -88,16 +88,34 @@ const SurahDetailScreen = () => {
     setModalVisible(false);
   };
 
-  const handleSelectLastRead = (id) => {
-    if (!selectedAyah) return;
-    updateLastRead(id, selectedAyah.number.inSurah, (status) => {
-      if (status === 'updated') {
-        Alert.alert('Berhasil', 'Ayat terakhir dibaca diperbarui.');
-        getLastReadList((data) => setLastReadList(data));
-        setLastReadModalVisible(false);
-      }
-    });
-  };
+ const handleSelectLastRead = (id) => {
+   if (!selectedAyah) return;
+
+   Alert.alert(
+     "Konfirmasi Perbarui",
+     `Yakin ingin memperbarui ayat terakhir dibaca ke Ayat ${selectedAyah.number.inSurah}?`,
+     [
+       {
+         text: "Batal",
+         style: "cancel",
+       },
+       {
+         text: "Perbarui",
+         onPress: () => {
+           updateLastRead(id, selectedAyah.number.inSurah, (status) => {
+             if (status === 'updated') {
+               Alert.alert('Berhasil', 'Ayat terakhir dibaca diperbarui.');
+               getLastReadList((data) => setLastReadList(data));
+               setLastReadModalVisible(false);
+             }
+           });
+         },
+         style: "default"
+       }
+     ],
+     { cancelable: true }
+   );
+ };
 
   const handleAddLastRead = () => {
     if (!selectedAyah || !newBookmarkName.trim()) {

@@ -139,3 +139,15 @@ export const updateBookmarkStatus = (id, isActive, callback) => {
         );
     });
 };
+
+//delete bookmark with update status
+export const updateLastReadStatus = (id, isActive, callback) => {
+    db.transaction((tx) => {
+        tx.executeSql(
+            "UPDATE quran_bookmark SET is_active = ? WHERE id = ?",
+            [isActive, id],
+            () => callback(),
+            (_, error) => console.error('Error updating bookmark:', error)
+        );
+    });
+};

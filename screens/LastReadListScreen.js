@@ -1,15 +1,74 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Modal, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { getLastReadList } from '../utils/database';
+import { getLastReadList, updateLastReadStatus } from '../utils/database';
 
 const LastReadListScreen = () => {
     const navigation = useNavigation();
     const [lastReadList, setLastReadList] = useState([]);
+    const [selectedBookmark, setSelectedBookmark] = useState(null);
+    const [isModalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         getLastReadList((data) => setLastReadList(data));
     }, []);
+
+    const fetchBookmarks = () => {
+            getLastReadList((data) => {
+                if (Array.isArray(data)) {
+                    setLastReadList(data);
+                } else {
+                    setLastReadList([]); // Pastikan bookmarkList tetap array
+                }
+            });
+        };
+
+    const handleOpenMenu = (bookmark) => {
+            setSelectedBookmark(bookmark);
+            setModalVisible(true);
+    };
+
+    const handleViewAyat = () => {
+            if (selectedBookmark) {
+                navigation.navigate('SurahDetail', {
+                    surah: {
+                        number: selectedBookmark.surah,
+                        name: selectedBookmark.name_surah,
+                        numberAyah: selectedBookmark.ayah,
+                        translation: selectedBookmark.translation
+                    }
+                });
+            }
+            setModalVisible(false);
+        };
+
+     const handleDeleteBookmark = () => {
+         if (selectedBookmark) {
+             Alert.alert(
+                 "Konfirmasi Hapus",
+                 "Apakah Anda yakin ingin menghapus penanda ini?",
+                 [
+                     {
+                         text: "Batal",
+                         style: "cancel",
+                     },
+                     {
+                         text: "Hapus",
+                         style: "destructive",
+                         onPress: () => {
+                             updateLastReadStatus(selectedBookmark.id, 0, () => {
+                                 Alert.alert("Sukses", "Terakhir dibaca berhasil dihapus.");
+                                 fetchBookmarks(); // Refresh data setelah dihapus
+                             });
+                             setModalVisible(false);
+                         },
+                     },
+                 ],
+                 { cancelable: true }
+             );
+         }
+     };
+
 
     return (
         <View style={styles.container}>
@@ -20,15 +79,15 @@ const LastReadListScreen = () => {
             ) : (
                 <FlatList
                     data={lastReadList}
-                    keyExtractor={(item) => item.id.toString()}
+                    keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
                     renderItem={({ item }) => (
-                        <View style={styles.itemContainer}>
-                            <Text style={styles.surahText}>
-                                📖 {item.name_surah} - Ayat {item.ayah}
-                            </Text>
-                            <Text style={styles.bookmarkText}>🔖 {item.name_bookmark}</Text>
-                        </View>
-                    )}
+                    <TouchableOpacity style={styles.itemContainer} onPress={() => handleOpenMenu(item)}>
+                       <Text style={styles.surahText}>
+                       📖 {item.name_surah} - Ayat {item.ayah}
+                       </Text>
+                       <Text style={styles.bookmarkText}>🔖 {item.name_bookmark}</Text>
+                    </TouchableOpacity>
+                   )}
                 />
             )}
 
@@ -36,6 +95,28 @@ const LastReadListScreen = () => {
             <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
                 <Text style={styles.backButtonText}>Kembali ke Home</Text>
             </TouchableOpacity>
+
+            {/* Modal Popup */}
+            <Modal
+            visible={isModalVisible}
+             transparent={true}
+                animationType="slide"
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <TouchableOpacity style={styles.modalItem} onPress={handleViewAyat}>
+                            <Text>📖 View Ayat</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.modalItem} onPress={handleDeleteBookmark}>
+                            <Text>🗑 Hapus Terakhir dibaca</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.modalItem} onPress={() => setModalVisible(false)}>
+                            <Text>❌ Batal</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 };
@@ -49,6 +130,10 @@ const styles = StyleSheet.create({
     bookmarkText: { fontSize: 14, color: 'gray' },
     backButton: { marginTop: 20, backgroundColor: '#007bff', padding: 12, borderRadius: 5, alignItems: 'center' },
     backButtonText: { color: 'white', fontWeight: 'bold' },
+
+    modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' },
+    modalContent: { backgroundColor: '#fff', padding: 20, borderRadius: 8, width: 250, alignItems: 'center' },
+    modalItem: { padding: 10, width: '100%', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#ddd' }
 });
 
 export default LastReadListScreen;

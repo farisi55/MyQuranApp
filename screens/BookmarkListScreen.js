@@ -42,16 +42,32 @@ const BookmarkListScreen = () => {
         setModalVisible(false);
     };
 
-
     const handleDeleteBookmark = () => {
-        if (selectedBookmark) {
-            updateBookmarkStatus(selectedBookmark.id, 0, () => {
-                Alert.alert("Sukses", "Bookmark berhasil dihapus.");
-                fetchBookmarks(); // Refresh data setelah dihapus
-            });
-        }
-        setModalVisible(false);
-    };
+             if (selectedBookmark) {
+                 Alert.alert(
+                     "Konfirmasi Hapus",
+                     "Apakah Anda yakin ingin menghapus penanda ini?",
+                     [
+                         {
+                             text: "Batal",
+                             style: "cancel",
+                         },
+                         {
+                             text: "Hapus",
+                             style: "destructive",
+                             onPress: () => {
+                                 updateBookmarkStatus(selectedBookmark.id, 0, () => {
+                                     Alert.alert("Sukses", "Terakhir dibaca berhasil dihapus.");
+                                     fetchBookmarks(); // Refresh data setelah dihapus
+                                 });
+                                 setModalVisible(false);
+                             },
+                         },
+                     ],
+                     { cancelable: true }
+                 );
+             }
+         };
 
     return (
         <View style={styles.container}>
