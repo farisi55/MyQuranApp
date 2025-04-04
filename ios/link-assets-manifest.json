@@ -2,8 +2,40 @@
   "migIndex": 1,
   "data": [
     {
+      "path": "assets/fonts/AlQuran-IndoPak.ttf",
+      "sha1": "68e1092cec67d263d9c93316abe085232013102f"
+    },
+    {
       "path": "assets/fonts/AmiriQuran-Regular.ttf",
       "sha1": "85a61c04c0e54b73f5e473d35185d10915ce849f"
+    },
+    {
+      "path": "assets/fonts/AmiriQuranColored-Regular.ttf",
+      "sha1": "9b23d8a67991cf7b5d1a3c957e7cddb3756381d6"
+    },
+    {
+      "path": "assets/fonts/KFGQPC.ttf",
+      "sha1": "154d7299c366c1e24801fc832e2ecec25c28b096"
+    },
+    {
+      "path": "assets/fonts/Lateef-SemiBold.ttf",
+      "sha1": "680f155ee0639c2416811be470078352e03fdbb8"
+    },
+    {
+      "path": "assets/fonts/LPMQ-IsepMisbah.ttf",
+      "sha1": "72babf824694a116c8fe97b580dd82b5bf4e4f40"
+    },
+    {
+      "path": "assets/fonts/LPMQ-ISYARAT.ttf",
+      "sha1": "f85e81662ec43b465c98a69d70f5bf07850208f3"
+    },
+    {
+      "path": "assets/fonts/ScheherazadeNew-SemiBold.ttf",
+      "sha1": "bde19a850d6b1300a0db65ae5f40a3c6af191a2e"
+    },
+    {
+      "path": "assets/fonts/Uthman.ttf",
+      "sha1": "d21a85f7270dd6cabfe110ce175d7802acc06552"
     }
   ]
 }

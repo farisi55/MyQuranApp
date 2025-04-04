@@ -12,6 +12,14 @@
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A0948564FEDE49F99106C043 /* AmiriQuran-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F529B81CCA204A30AE819C9B /* AmiriQuran-Regular.ttf */; };
+		AA1CEB08717848E2860056A3 /* AmiriQuranColored-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3E21BFAA0A245D1A96724B5 /* AmiriQuranColored-Regular.ttf */; };
+		5C2F4855B44547E9930FA89C /* ScheherazadeNew-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 731D1EC543064D25A5694365 /* ScheherazadeNew-SemiBold.ttf */; };
+		5C9224849E9C4FD98E235837 /* AlQuran-IndoPak.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D9E4AA7D2DCE4B59A4533731 /* AlQuran-IndoPak.ttf */; };
+		74FABD2D8B184BC3A49E33C3 /* KFGQPC.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 68718CAF2BEE4DCFB2F0D634 /* KFGQPC.ttf */; };
+		A69B74CF535746178A596540 /* LPMQ-IsepMisbah.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EF37AF504CF348BD88D97F61 /* LPMQ-IsepMisbah.ttf */; };
+		E0B2AF6031F64BC8A4C52A32 /* LPMQ-ISYARAT.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FF95ADECC9AC4F7FA61C567A /* LPMQ-ISYARAT.ttf */; };
+		44961302562E425AA749ABBC /* Lateef-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DA0F151036454AB084AB9963 /* Lateef-SemiBold.ttf */; };
+		A5D2731A022549DBA1C3834D /* Uthman.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1BFA8628148C4507BB7EDC12 /* Uthman.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +45,14 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = MyQuranApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F529B81CCA204A30AE819C9B /* AmiriQuran-Regular.ttf */ = {isa = PBXFileReference; name = "AmiriQuran-Regular.ttf"; path = "../assets/fonts/AmiriQuran-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D3E21BFAA0A245D1A96724B5 /* AmiriQuranColored-Regular.ttf */ = {isa = PBXFileReference; name = "AmiriQuranColored-Regular.ttf"; path = "../assets/fonts/AmiriQuranColored-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		731D1EC543064D25A5694365 /* ScheherazadeNew-SemiBold.ttf */ = {isa = PBXFileReference; name = "ScheherazadeNew-SemiBold.ttf"; path = "../assets/fonts/ScheherazadeNew-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D9E4AA7D2DCE4B59A4533731 /* AlQuran-IndoPak.ttf */ = {isa = PBXFileReference; name = "AlQuran-IndoPak.ttf"; path = "../assets/fonts/AlQuran-IndoPak.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		68718CAF2BEE4DCFB2F0D634 /* KFGQPC.ttf */ = {isa = PBXFileReference; name = "KFGQPC.ttf"; path = "../assets/fonts/KFGQPC.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EF37AF504CF348BD88D97F61 /* LPMQ-IsepMisbah.ttf */ = {isa = PBXFileReference; name = "LPMQ-IsepMisbah.ttf"; path = "../assets/fonts/LPMQ-IsepMisbah.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FF95ADECC9AC4F7FA61C567A /* LPMQ-ISYARAT.ttf */ = {isa = PBXFileReference; name = "LPMQ-ISYARAT.ttf"; path = "../assets/fonts/LPMQ-ISYARAT.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		DA0F151036454AB084AB9963 /* Lateef-SemiBold.ttf */ = {isa = PBXFileReference; name = "Lateef-SemiBold.ttf"; path = "../assets/fonts/Lateef-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1BFA8628148C4507BB7EDC12 /* Uthman.ttf */ = {isa = PBXFileReference; name = "Uthman.ttf"; path = "../assets/fonts/Uthman.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +139,14 @@
 			isa = "PBXGroup";
 			children = (
 				F529B81CCA204A30AE819C9B /* AmiriQuran-Regular.ttf */,
+				D3E21BFAA0A245D1A96724B5 /* AmiriQuranColored-Regular.ttf */,
+				731D1EC543064D25A5694365 /* ScheherazadeNew-SemiBold.ttf */,
+				D9E4AA7D2DCE4B59A4533731 /* AlQuran-IndoPak.ttf */,
+				68718CAF2BEE4DCFB2F0D634 /* KFGQPC.ttf */,
+				EF37AF504CF348BD88D97F61 /* LPMQ-IsepMisbah.ttf */,
+				FF95ADECC9AC4F7FA61C567A /* LPMQ-ISYARAT.ttf */,
+				DA0F151036454AB084AB9963 /* Lateef-SemiBold.ttf */,
+				1BFA8628148C4507BB7EDC12 /* Uthman.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -198,6 +222,14 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				A0948564FEDE49F99106C043 /* AmiriQuran-Regular.ttf in Resources */,
+				AA1CEB08717848E2860056A3 /* AmiriQuranColored-Regular.ttf in Resources */,
+				5C2F4855B44547E9930FA89C /* ScheherazadeNew-SemiBold.ttf in Resources */,
+				5C9224849E9C4FD98E235837 /* AlQuran-IndoPak.ttf in Resources */,
+				74FABD2D8B184BC3A49E33C3 /* KFGQPC.ttf in Resources */,
+				A69B74CF535746178A596540 /* LPMQ-IsepMisbah.ttf in Resources */,
+				E0B2AF6031F64BC8A4C52A32 /* LPMQ-ISYARAT.ttf in Resources */,
+				44961302562E425AA749ABBC /* Lateef-SemiBold.ttf in Resources */,
+				A5D2731A022549DBA1C3834D /* Uthman.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

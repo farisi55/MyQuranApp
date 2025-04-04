@@ -50,6 +50,14 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>AmiriQuran-Regular.ttf</string>
+		<string>AmiriQuranColored-Regular.ttf</string>
+		<string>ScheherazadeNew-SemiBold.ttf</string>
+		<string>AlQuran-IndoPak.ttf</string>
+		<string>KFGQPC.ttf</string>
+		<string>LPMQ-IsepMisbah.ttf</string>
+		<string>LPMQ-ISYARAT.ttf</string>
+		<string>Lateef-SemiBold.ttf</string>
+		<string>Uthman.ttf</string>
 	</array>
 </dict>
 </plist>

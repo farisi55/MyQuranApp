@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
   loadingText: { fontSize: 18, textAlign: 'center', marginTop: 20 },
   ayahContainer: { paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#ddd' },
   ayahNumber: { fontSize: 12, fontWeight: 'bold' },
-  arabic: { fontSize: 30, textAlign: 'right', marginTop: 4, fontFamily: 'AmiriQuran-Regular' },
+  arabic: { fontSize: 30, textAlign: 'right', marginTop: 4, fontFamily: 'LPMQ-IsepMisbah' },
   translation: { fontSize: 12, color: 'gray', marginTop: 4 },
   modalContent: { backgroundColor: 'white', padding: 20, borderRadius: 10 },
   modalTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10, textAlign: 'center' },
