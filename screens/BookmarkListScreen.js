@@ -34,6 +34,7 @@ const BookmarkListScreen = () => {
                 surah: {
                     number: selectedBookmark.surah,
                     name: selectedBookmark.name_surah,
+                    numberAyah: selectedBookmark.ayah,
                     translation: selectedBookmark.translation
                 }
             });

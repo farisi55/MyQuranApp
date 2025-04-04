@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef  } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, ScrollView, Alert, TextInput } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import Modal from 'react-native-modal';
@@ -7,7 +7,8 @@ import { initDatabase, saveLastRead, getLastReadList, updateLastRead, saveBookma
 
 const SurahDetailScreen = () => {
   const route = useRoute();
-  const { surah, surahNumber, ayahNumber } = route.params;
+  const { surah, surahNumber, ayahNumber = 1 } = route.params;
+  const [itemHeights, setItemHeights] = useState({});
   const [surahDetail, setSurahDetail] = useState(null);
   const [selectedAyah, setSelectedAyah] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -17,16 +18,64 @@ const SurahDetailScreen = () => {
   const [newBookmarkName, setNewBookmarkName] = useState('');
   const [isBookmarkModalVisible, setBookmarkModalVisible] = useState(false);
   const [bookmarkName, setBookmarkName] = useState('');
+  const listRef = useRef(null); // Untuk referensi FlatList agar bisa scroll otomatis
 
 
   useEffect(() => {
-    initDatabase();
-    const data = surahData[surah.number];
-    setSurahDetail(data);
+      initDatabase();
 
-    // Ambil daftar terakhir dibaca
-    getLastReadList((data) => setLastReadList(data));
-  }, [surah]);
+      const data = surahData[surah.number]; // Ambil data surah berdasarkan nomor surah
+      setSurahDetail(data);
+
+      // Ambil daftar terakhir dibaca
+      getLastReadList((data) => setLastReadList(data));
+
+
+
+      // Pastikan data dan ayahs tersedia sebelum scrolling
+     if (data && data.ayahs && surah.numberAyah) {
+             setTimeout(() => {
+                 let targetAyahNumber = Number(surah.numberAyah);
+
+                 let index = data.ayahs.findIndex((item) => item.number.inSurah === targetAyahNumber);
+
+                 if (index !== -1 && listRef.current) {
+                     try {
+                         listRef.current.scrollToIndex({ index, animated: true });
+                     } catch (error) {
+                         listRef.current.scrollToOffset({ offset: index * 286, animated: true });
+                     }
+                 } else {
+                     console.warn("Ayah tidak ditemukan dalam data!");
+                 }
+             }, 500);
+      }
+  }, [surah.number, surah.numberAyah]); // Pastikan dependensi sudah benar
+
+
+// Fungsi untuk menangani penyimpanan tinggi tiap item
+    const handleItemLayout = (event, index) => {
+        const { height } = event.nativeEvent.layout;
+
+        setItemHeights(prev => ({
+            ...prev,
+            [index]: height
+        }));
+    };
+
+    // Fungsi untuk menghitung offset berdasarkan tinggi item sebelumnya
+    const getItemLayout = (data, index) => {
+        const heightList = Object.values(itemHeights);
+
+        // Hitung total tinggi item sebelumnya
+        const offset = heightList.slice(0, index).reduce((sum, h) => sum + h, 0);
+
+        return {
+            length: itemHeights[index] || 50,  // Default tinggi jika belum dihitung
+            offset,
+            index
+        };
+    };
 
 
   const handleLongPress = (ayah) => {
@@ -107,14 +156,19 @@ const SurahDetailScreen = () => {
       </Text>
 
       <FlatList
+        ref={listRef}
         data={surahDetail.ayahs}
-        keyExtractor={(item) => item.number.inQuran.toString()}
-        renderItem={({ item }) => (
+        keyExtractor={(item) => item.number.inSurah.toString()}
+        getItemLayout={getItemLayout}
+        renderItem={({ item, index }) => (
           <TouchableOpacity onLongPress={() => handleLongPress(item)}>
-            <View style={styles.ayahContainer}>
-              <Text style={styles.ayahNumber}>{item.number.inSurah}.</Text>
-              <Text style={styles.arabic}>{item.arab}</Text>
-              <Text style={styles.translation}>{item.translation}</Text>
+            <View
+            style={styles.ayahContainer}
+            onLayout={(event) => handleItemLayout(event, index)}
+            >
+                <Text style={styles.ayahNumber}>{item.number.inSurah}.</Text>
+                <Text style={styles.arabic}>{item.arab}</Text>
+                <Text style={styles.translation}>{item.translation}</Text>
             </View>
           </TouchableOpacity>
         )}
