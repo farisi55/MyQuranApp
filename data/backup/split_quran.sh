@@ -10,7 +10,7 @@ OUTPUT_DIR="surah_data"
 # Pastikan direktori output ada
 mkdir -p "$OUTPUT_DIR"
 
-# Ekstrak daftar surah ke surahs.json
+# Ekstrak daftar surah ke surahs_list.json
 jq '[.[] | {number, name, translation, numberOfAyahs, revelation, description}]' "$INPUT_FILE" > "$SURAH_FILE"
 
 # Loop untuk setiap surah dan buat file JSON per surah
